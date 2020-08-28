@@ -11,6 +11,9 @@ import (
 	"gopkg.in/fsnotify.v1"
 )
 
+// viperSetup initializes viper and specified
+// config values from defined configuration
+// providers.
 func viperSetup() error {
 	viper.SetDefault("providers", []string{})
 	viper.SetDefault("webserver.debug", false)
@@ -35,18 +38,21 @@ func viperSetup() error {
 }
 
 func main() {
-
+	// setup config via viper
 	if err := viperSetup(); err != nil {
 		log.Fatal("failed parsing config: ", err)
 	}
 
+	// setup provider host
 	prov := provider.New()
 
+	// setup file watcher
 	watcher, err := filewatcher.New(true)
 	if err != nil {
 		log.Fatal("failed creating file watcher: ", err)
 	}
 
+	// setup provider watch paths
 	providers := viper.GetStringSlice("providers")
 	for _, provider := range providers {
 		if err = watcher.AddPath(provider); err != nil {
@@ -54,6 +60,7 @@ func main() {
 		}
 	}
 
+	// register file watch handlers
 	watcher.Handle(fsnotify.Create|fsnotify.Write, func(e fsnotify.Event) {
 		if err = prov.UpdateFromFile(e.Name); err != nil {
 			log.Print("error : failed updating providers: ", err)
@@ -61,10 +68,17 @@ func main() {
 		log.Print("providers updated: ", e.Name)
 	})
 
-	watcher.Start()
+	// register file watcher error handler
+	watcher.HandleError(func(err error) {
+		log.Print("error : file watcher: ", err)
+	})
+
+	// start file watcher event loop
+	watcher.Run()
 	log.Println("file watcher started")
 	defer watcher.Close()
 
+	// initialize and run web server
 	ws := webserver.New(prov, webserver.Config{
 		Debug:      viper.GetBool("webserver.debug"),
 		Address:    viper.GetString("webserver.address"),
@@ -75,5 +89,7 @@ func main() {
 	}
 	log.Println("web server started")
 
+	// block until file watcher loop closes or
+	// prcess exists
 	<-watcher.Done()
 }

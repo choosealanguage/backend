@@ -1,3 +1,7 @@
+// Package provider provides models and
+// functionalities to parse provider
+// information from file and update them
+// to internal maps.
 package provider
 
 import (
@@ -6,17 +10,24 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type Provider struct {
+// ProviderHost wraps compiled maps of provider
+// model instances.
+type ProviderHost struct {
 	languages map[string]*LanguageModel
 }
 
-func New() *Provider {
-	return &Provider{
+// New returns a new instance of Provider.
+func New() *ProviderHost {
+	return &ProviderHost{
 		languages: make(map[string]*LanguageModel),
 	}
 }
 
-func (p *Provider) UpdateFromFile(path string) (err error) {
+// UpdateFromFile tries to read the passed file
+// and pases it using a YAML decoder. Depending
+// on the provider type, the provider is then
+// updated to the maps of the ProviderHost.
+func (p *ProviderHost) UpdateFromFile(path string) (err error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return
@@ -41,6 +52,8 @@ func (p *Provider) UpdateFromFile(path string) (err error) {
 	return
 }
 
-func (p *Provider) GetLanguages() map[string]*LanguageModel {
+// GetLanguages returns the provider map of
+// registered language models.
+func (p *ProviderHost) GetLanguages() map[string]*LanguageModel {
 	return p.languages
 }
