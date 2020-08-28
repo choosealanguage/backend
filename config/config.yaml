@@ -1,0 +1,8 @@
+providers:
+  - './testdata/languages'
+
+webserver:
+  debug: true
+  address: 127.0.0.1:8080
+  cors:
+    origin: http://127.0.0.1:3000

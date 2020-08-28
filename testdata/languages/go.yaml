@@ -1,0 +1,53 @@
+id: go
+name: Go
+type: language
+
+website: https://go.dev
+
+repository: https://github.com/golang/go
+
+paradigm:
+  - 'statically-typed'
+  - 'compiled'
+  - 'concurrent'
+  - 'functional'
+  - 'imperative'
+  - 'object-oriented'
+
+community:
+  scale: 0.8
+  properties:
+    - 'strongly open source oriented'
+  
+difficulty:
+  scale: 0.3
+
+popularity:
+  scale: 0.6
+
+targets:
+  - 'backend'
+  - 'web'
+  - 'cloud'
+  - 'cli'
+  - 'concurrency'
+  - 'multiplatform'
+  - 'self-contained'
+
+popular_packages:
+  - name: fasthttp
+    repository: https://github.com/valyala/fasthttp
+    website: ''
+  - name: discordgo
+    repository: https://github.com/bwmarrin/discordgo
+    website: ''
+
+popular_products:
+  - name: Kubernetes
+    website: https://kubernetes.io
+  - name: Traefik
+    website: https://docs.traefik.io
+
+snippets:
+  - name: 'Hello World'
+    source: https://gist.githubusercontent.com/zekroTJA/18da416bff6bb7f82bdeaab54461d54b/raw/15f7babc34b41391279e0153adc1765ca66196ee/helloworld.go
